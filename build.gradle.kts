@@ -1,20 +1,32 @@
 plugins {
     id("java")
+    id("idea")
+    id("fr.ladder.releasr") version "1.0.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "fr.ladder"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven {
+        name = "maven-public"
+        url = uri("https://repo.lylaw.fr/repository/maven-public/")
+    }
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.jetbrains", "annotations", "24.0.1")
+    implementation("io.github.classgraph", "classgraph", "4.8.181")
+    implementation("org.slf4j", "slf4j-simple", "1.6.1")
+
+    compileOnly("fr.snowtyy", "papermc", "1.8.8")
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.shadowJar {
+    archiveClassifier.set("")
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }
